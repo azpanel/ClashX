@@ -12,7 +12,7 @@ def upgrade_version(current_version):
 def get_full_version():
     with open('./go.mod') as file:
         for line in file.readlines():
-            if "clash" in line and "ClashX" not in line:
+            if "mihomo" in line and "ClashX" not in line and "require" not in line:
                 return line.split(" ")[-1].strip()
 
 def install():
