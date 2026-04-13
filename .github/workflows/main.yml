@@ -49,7 +49,7 @@ jobs:
 
     - name: build
       env:
-        CODE_SIGN_IDENTITY: "Developer ID Application: Fuzhou West2Online Internet Inc. (MEWHFZ92DY)"
+        CODE_SIGN_IDENTITY: ${{ secrets.CODE_SIGN_IDENTITY }}
       run: |
         cd ClashX
         python3 add_build_info.py
@@ -79,7 +79,7 @@ jobs:
         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
         FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       run: |
-        bundle exec fastlane run notarize package:"./ClashX.dmg" bundle_id:"com.west2online.ClashX" asc_provider:MEWHFZ92DY
+        bundle exec fastlane run notarize package:"./ClashX.dmg" bundle_id:"${{ secrets.BUNDLE_ID }}" asc_provider:"${{ secrets.ASC_PROVIDER }}"
 
     - name: upload to appcenter
       if: startsWith(github.ref, 'refs/tags/') || contains(github.event.head_commit.message, '[beta]')
@@ -110,9 +110,3 @@ jobs:
             ClashX.dmg
         draft: true
         prerelease: true
-
-    - name: update gitpage
-      if: startsWith(github.ref, 'refs/tags/')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITPAGE_TOKEN }}
-      run: 'curl -u yichengchen:$GITHUB_TOKEN -X POST https://api.github.com/repos/yichengchen/clashX/pages/builds -H "Accept: application/vnd.github.mister-fantastic-preview+json"'
